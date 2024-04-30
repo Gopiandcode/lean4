@@ -55,6 +55,11 @@ In the case of `@[extern]` all *irrelevant* types are removed first; see next se
 * Any other type is represented by `lean_object *`.
   Its runtime value is a pointer to an object of a subtype of `lean_object` (see respective declarations in `lean.h`) or the unboxed value `lean_box(cidx)` for the `cidx`th constructor of an inductive type if this constructor does not have any relevant parameters.
 
+  Furthemore, the memory representation of the fields of any constructor adhere to the following rules:
+  - usize fields are stored after object fields.
+  - regular scalar fields are stored after object and usize fields, and are sorted by size, largest to smallest.
+  - in both cases, for fields with the same size, they occur in memory in the order they are present in the constructor definition
+
   Example: the runtime value of `u : Unit` is always `lean_box(0)`.
 
 ### Borrowing
